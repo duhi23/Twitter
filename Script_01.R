@@ -16,14 +16,20 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token=access_token, ac
 
 # Extrayendo primeros tweets
 
-rstats <- searchTwitter("#rstats", n=9999, since='2015-11-01')
+rstats <- searchTwitter("#rstats", n=9999, since='2015-10-01')
 datos <- do.call("rbind", lapply(rstats, as.data.frame))
 names(datos)
+str(datos)
 
 usuarios <- subset(datos, isRetweet==FALSE)$screenName
 usuarios <- sort(table(usuarios), decreasing=T)
 head(usuarios)
 usuarios[1:30]
+
+usuarios2 <- subset(datos, isRetweet==TRUE)$screenName
+usuarios2 <- sort(table(usuarios2), decreasing=T)
+head(usuarios2)
+
 
 # Tweets de duhi23
 
