@@ -20,7 +20,12 @@ rstats <- searchTwitter("#rstats", n=9999, since='2015-11-01')
 datos <- do.call("rbind", lapply(rstats, as.data.frame))
 names(datos)
 
+usuarios <- subset(datos, isRetweet==FALSE)$screenName
+usuarios <- sort(table(usuarios), decreasing=T)
+head(usuarios)
+usuarios[1:30]
+
 # Tweets de duhi23
 
-duhi <- userTimeline('duhi23', n=100)
+duhi <- userTimeline('duhi23', n=50)
 duhi2 <- do.call("rbind", lapply(duhi, as.data.frame))
