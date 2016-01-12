@@ -29,6 +29,27 @@ usuarios[1:30]
 # Texto tweets
 texto <- subset(datos, isRetweet==FALSE)$text
 
+pure_text <- function(texto){
+      palabras <- unlist(strsplit(texto, split=" "))
+      palabras <- palabras[nchar(palabras)!=0]
+      return(palabras)
+}
+
+# Creamos un gran vector que contenga todas las palabras del los tweets
+palabras <- do.call("c", lapply(texto, pure_text))
+conteo <- sort(table(palabras), decreasing=T)
+datos <- data.frame(palabra=rownames(conteo), frecuencia=as.vector(conteo))
+
+# Consideraremos las primeras 50 palabras para graficarlas
+datos <- datos[1:50,]
+
+library(wordcloud)
+
+wordcloud(datos$palabra, datos$frecuencia)
+
+
+# Obteniendo los Retweets
+
 usuarios2 <- subset(datos, isRetweet==TRUE)$screenName
 usuarios2 <- sort(table(usuarios2), decreasing=T)
 head(usuarios2)
@@ -61,3 +82,13 @@ wordcloud(
       adventure on which man has ever embarked.", random.order=FALSE)
 
 wordcloud(texto)
+
+strsplit("Many years ago the great British explorer George Mallory, who 
+      was to die on Mount Everest, was asked why did he want to climb 
+         it. He said, \"Because it is there.\"
+         
+         Well, space is there, and we're going to climb it, and the 
+         moon and the planets are there, and new hopes for knowledge 
+         and peace are there. And, therefore, as we set sail we ask 
+         God's blessing on the most hazardous and dangerous and greatest 
+         adventure on which man has ever embarked.", split="")
