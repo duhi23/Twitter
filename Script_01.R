@@ -41,11 +41,11 @@ conteo <- sort(table(palabras), decreasing=T)
 datos <- data.frame(palabra=rownames(conteo), frecuencia=as.vector(conteo))
 
 # Consideraremos las primeras 50 palabras para graficarlas
-datos <- datos[1:50,]
+datos <- datos[1:70,]
 
 library(wordcloud)
 
-wordcloud(datos$palabra, datos$frecuencia)
+wordcloud(datos$palabra, datos$frecuencia, colors = brewer.pal(8, "Dark2"))
 
 
 # Obteniendo los Retweets
@@ -69,26 +69,3 @@ bache2 <- do.call("rbind", lapply(duhi, as.data.frame))
 
 install.packages('wordcloud', dependencies = TRUE)
 library(wordcloud)
-
-wordcloud(
-      "Many years ago the great British explorer George Mallory, who 
-      was to die on Mount Everest, was asked why did he want to climb 
-      it. He said, \"Because it is there.\"
-      
-      Well, space is there, and we're going to climb it, and the 
-      moon and the planets are there, and new hopes for knowledge 
-      and peace are there. And, therefore, as we set sail we ask 
-      God's blessing on the most hazardous and dangerous and greatest 
-      adventure on which man has ever embarked.", random.order=FALSE)
-
-wordcloud(texto)
-
-strsplit("Many years ago the great British explorer George Mallory, who 
-      was to die on Mount Everest, was asked why did he want to climb 
-         it. He said, \"Because it is there.\"
-         
-         Well, space is there, and we're going to climb it, and the 
-         moon and the planets are there, and new hopes for knowledge 
-         and peace are there. And, therefore, as we set sail we ask 
-         God's blessing on the most hazardous and dangerous and greatest 
-         adventure on which man has ever embarked.", split="")
