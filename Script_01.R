@@ -26,6 +26,9 @@ usuarios <- sort(table(usuarios), decreasing=T)
 head(usuarios)
 usuarios[1:30]
 
+# Texto tweets
+texto <- subset(datos, isRetweet==FALSE)$text
+
 usuarios2 <- subset(datos, isRetweet==TRUE)$screenName
 usuarios2 <- sort(table(usuarios2), decreasing=T)
 head(usuarios2)
@@ -35,3 +38,26 @@ head(usuarios2)
 
 duhi <- userTimeline('duhi23', n=50)
 duhi2 <- do.call("rbind", lapply(duhi, as.data.frame))
+
+
+# Tweets de stefanbache
+
+bache <- userTimeline('stefanbache', n=100)
+bache2 <- do.call("rbind", lapply(duhi, as.data.frame))
+
+
+install.packages('wordcloud', dependencies = TRUE)
+library(wordcloud)
+
+wordcloud(
+      "Many years ago the great British explorer George Mallory, who 
+      was to die on Mount Everest, was asked why did he want to climb 
+      it. He said, \"Because it is there.\"
+      
+      Well, space is there, and we're going to climb it, and the 
+      moon and the planets are there, and new hopes for knowledge 
+      and peace are there. And, therefore, as we set sail we ask 
+      God's blessing on the most hazardous and dangerous and greatest 
+      adventure on which man has ever embarked.", random.order=FALSE)
+
+wordcloud(texto)
