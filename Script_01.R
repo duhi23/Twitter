@@ -1,5 +1,5 @@
 #################################################
-#####     Primera apliacion con TwitteR     #####
+#####     Primera aplicacion con TwitteR     #####
 #################################################
 
 install.packages('twitteR', dependencies = TRUE)
@@ -16,7 +16,7 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token=access_token, ac
 
 # Extrayendo primeros tweets
 
-rstats <- searchTwitter("#rstats", n=9999, since='2015-10-01')
+rstats <- searchTwitter("#DiálogoRC", n=9999, since='2016-01-11')
 datos <- do.call("rbind", lapply(rstats, as.data.frame))
 names(datos)
 str(datos)
@@ -30,8 +30,13 @@ usuarios[1:30]
 texto <- subset(datos, isRetweet==FALSE)$text
 
 pure_text <- function(texto){
+      #texto <- tolower(texto)
       palabras <- unlist(strsplit(texto, split=" "))
       palabras <- palabras[nchar(palabras)!=0]
+      conectores <- palabras %in% c("a", "y", "que", "la", "los", "no", "un", "las", "sus", "al", "si", 
+                                    "nos", "han", "hemos", "para", "de", "el", "en", "es", "del", "más",
+                                    "se", "con", "ha", "una", "tiene", "está", "uno", "su", "lo", "pero")
+      palabras <- palabras[!conectores]
       return(palabras)
 }
 
@@ -41,7 +46,7 @@ conteo <- sort(table(palabras), decreasing=T)
 datos <- data.frame(palabra=rownames(conteo), frecuencia=as.vector(conteo))
 
 # Consideraremos las primeras 50 palabras para graficarlas
-datos <- datos[1:70,]
+datos <- datos[1:100,]
 
 library(wordcloud)
 
