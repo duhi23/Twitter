@@ -31,11 +31,18 @@ texto <- subset(datos, isRetweet==FALSE)$text
 
 pure_text <- function(texto){
       #texto <- tolower(texto)
+      library(stringr)
       palabras <- unlist(strsplit(texto, split=" "))
-      palabras <- palabras[nchar(palabras)!=0]
-      conectores <- palabras %in% c("a", "y", "que", "la", "los", "no", "un", "las", "sus", "al", "si", 
-                                    "nos", "han", "hemos", "para", "de", "el", "en", "es", "del", "más",
-                                    "se", "con", "ha", "una", "tiene", "está", "uno", "su", "lo", "pero")
+      palabras <- palabras[str_length(palabras)>3]
+      #palabras <- sub("\\.", "", palabras)
+      #palabras <- sub("\\,", "", palabras)
+      #palabras <- sub("\\:", "", palabras)
+      palabras <- gsub(pattern = "[[:punct:]]", replacement = "", palabras)
+      palabras <- tolower(palabras)
+      #palabras <- palabras[nchar(palabras)!=0]
+      conectores <- palabras %in% c("hemos", "para", "tiene", "está", "pero", "otro", "puede", "este", 
+                                    "esta", "todos", "todas", "mucho", "será", "mejor", "gran", "como",
+                                    "sido", "somos")
       palabras <- palabras[!conectores]
       return(palabras)
 }
@@ -46,7 +53,7 @@ conteo <- sort(table(palabras), decreasing=T)
 datos <- data.frame(palabra=rownames(conteo), frecuencia=as.vector(conteo))
 
 # Consideraremos las primeras 50 palabras para graficarlas
-datos <- datos[1:100,]
+datos <- datos[3:100,]
 
 library(wordcloud)
 
