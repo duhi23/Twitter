@@ -73,11 +73,52 @@ duhi <- userTimeline('duhi23', n=50)
 duhi2 <- do.call("rbind", lapply(duhi, as.data.frame))
 
 
-# Tweets de stefanbache
+## Usando el paquete: stream R 
 
-bache <- userTimeline('stefanbache', n=100)
-bache2 <- do.call("rbind", lapply(duhi, as.data.frame))
+install.packages("streamR")  # from CRAN
+library(devtools)
+install_github("streamR", "pablobarbera", subdir = "streamR")  # from GitHub
+
+install.packages('ROAuth')
+library(ROAuth)
+requestURL <- "https://api.twitter.com/oauth/request_token"
+accessURL <- "https://api.twitter.com/oauth/access_token"
+authURL <- "https://api.twitter.com/oauth/authorize"
+consumerKey <- "gKXs8cHpEqBbBpHY3rotdVTzH"
+consumerSecret <- "tdIGk14MX3ix92u6JiFlUncw6z2q7n1kSbvqsQMEFOxloXfPvv"
+my_oauth <- OAuthFactory$new(consumerKey = consumerKey, consumerSecret = consumerSecret, 
+                             requestURL = requestURL, accessURL = accessURL, authURL = authURL)
+my_oauth$handshake(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))
+save(my_oauth, file = "my_oauth.Rdata")
 
 
-install.packages('wordcloud', dependencies = TRUE)
-library(wordcloud)
+library(streamR)
+load("my_oauth.Rdata")
+filterStream("tweets.json", track = c("Obama", "Biden"), timeout = 120, 
+             oauth = my_oauth)
+
+tweets.df <- parseTweets("tweets.json", simplify = TRUE)
+head(tweets.df)
+
+c( length(grep("obama", tweets.df$text, ignore.case = TRUE)),
+   length(grep("biden", tweets.df$text, ignore.case = TRUE)) )
+
+
+
+filterStream("tweetsUS.json", locations = c(-125, 25, -66, 50), timeout = 300, 
+             oauth = my_oauth)
+tweets.df <- parseTweets("tweetsUS.json", verbose = FALSE)
+library(ggplot2)
+library(grid)
+map.data <- map_data("state")
+points <- data.frame(x = as.numeric(tweets.df$lon), y = as.numeric(tweets.df$lat))
+points <- points[points$y > 25, ]
+ggplot(map.data) + geom_map(aes(map_id = region), map = map.data, fill = "white", 
+            color = "grey20", size = 0.25) + expand_limits(x = map.data$long, y = map.data$lat) + 
+            theme(axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank(), 
+            axis.title = element_blank(), panel.background = element_blank(), panel.border = element_blank(), 
+            panel.grid.major = element_blank(), plot.background = element_blank(), 
+            plot.margin = unit(0 * c(-1.5, -1.5, -1.5, -1.5), "lines")) + geom_point(data = points, 
+            aes(x = x, y = y), size = 1, alpha = 1/5, color = "darkblue")
+
+
