@@ -20,6 +20,7 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token=access_token, ac
 
 rstats <- searchTwitter("#DiálogoRC", n=9999, since='2016-01-11')
 datos <- do.call("rbind", lapply(rstats, as.data.frame))
+head(datos)
 names(datos)
 str(datos)
 
