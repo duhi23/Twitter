@@ -18,7 +18,7 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token=access_token, ac
 
 # Extrayendo primeros tweets
 
-rstats <- searchTwitter("#DiálogoRC", n=9999, since='2016-01-11')
+rstats <- searchTwitter("#Pedernales", n=100000, since='2016-04-16')
 datos <- do.call("rbind", lapply(rstats, as.data.frame))
 head(datos)
 names(datos)
